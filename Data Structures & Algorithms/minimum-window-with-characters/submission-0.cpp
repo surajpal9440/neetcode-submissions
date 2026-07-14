@@ -1,0 +1,30 @@
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        unordered_map<char, int> need;
+        for (char c : t) need[c]++;
+
+        int l = 0, required = t.size();
+        int minLen = INT_MAX, start = 0;
+
+        for (int r = 0; r < s.size(); r++) {
+            if (need[s[r]] > 0)
+                required--;
+            need[s[r]]--;
+
+            while (required == 0) {
+                if (r - l + 1 < minLen) {
+                    minLen = r - l + 1;
+                    start = l;
+                }
+
+                need[s[l]]++;
+                if (need[s[l]] > 0)
+                    required++;
+                l++;
+            }
+        }
+
+        return minLen == INT_MAX ? "" : s.substr(start, minLen);
+    }
+};
